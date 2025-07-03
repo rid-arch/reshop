@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Re-shop - Platform e-commerce nomor 1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0d9488; /* Teal-600 */
+            --secondary-color: #f0fdfa; /* Teal-50 */
+            --text-dark: #1f2937; /* Gray-800 */
+            --text-light: #4b5563; /* Gray-600 */
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--secondary-color);
+            color: var(--text-dark);
+        }
+        .whatsapp-btn {
+            transition: all 0.3s ease;
+        }
+        .whatsapp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        .product-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(13, 148, 136, 0.1);
+        }
+        .product-image {
+            height: 220px;
+            object-fit: contain;
+            width: 100%;
+            transition: transform 0.3s ease;
+        }
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+        .modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="font-sans">
+    <nav class="bg-white/80 backdrop-blur-lg shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-3">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzBkOTQ4OCI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgMThjLTQuNDEgMC04LTMuNTktOC04czMuNTktOCA4LTggOCAzLjU5IDggOC0zLjU5IDgtOCA4eiIvPjxwYXRoIGQ9Ik0xMi41IDE3SDEydi03aDF2N2gtLjV6bS0xLTguNWgtLjAyYy0uMiAwLS4zOC4wNy0uNTIuMjFsLS43MS43MWMtLjE0LjE0LS4yMi4zMy0uMjIuNTNzLjA4LjM5LjIyLjUzTDExLjIgMTFsLjUyLjUyYy4xNC4xNC4zMy4yMi41My4yMmguMDJjLjIgMCAuMzgtLjA4LjUyLS4yMmwxLjk1LTEuOTVjLjE0LS4xNC4yMi0uMzMuMjItLjUzcy0uMDgtLjM5LS4yMi0uNTNMMTMuMDIgOC41Yy0uMTQtLjE0LS4zMy0uMjItLjUzLS4yMnoiLz48L3N2Zz4=" alt="JylooCare Logo" class="h-10 w-auto">
+                    <span class="text-2xl font-bold text-teal-600">Re-shop</span>
+                </div>
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#beranda" class="nav-link text-gray-700 hover:text-teal-600 font-medium">Beranda</a>
+                    <a href="#produk" class="nav-link text-gray-700 hover:text-teal-600 font-medium">Produk</a>
+                    <a href="#tentang" class="nav-link text-gray-700 hover:text-teal-600 font-medium">Tentang Kami</a>
+                    <a href="#kontak" class="nav-link text-gray-700 hover:text-teal-600 font-medium">Kontak</a>
+                    <button id="keranjang-btn" class="relative text-gray-700 hover:text-teal-600 transition-colors">
+                        <i class="fas fa-shopping-cart text-2xl"></i>
+                        <span id="keranjang-count" class="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+                    </button>
+                </div>
+                <div class="md:hidden flex items-center space-x-4">
+                    <button id="keranjang-btn-mobile" class="relative text-gray-700">
+                        <i class="fas fa-shopping-cart text-2xl"></i>
+                        <span id="keranjang-count-mobile" class="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+                    </button>
+                    <button id="menu-btn" class="text-gray-700">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white px-4 pb-4">
+            <a href="#beranda" class="block py-2 text-gray-700 hover:text-teal-600">Beranda</a>
+            <a href="#produk" class="block py-2 text-gray-700 hover:text-teal-600">Produk</a>
+            <a href="#tentang" class="block py-2 text-gray-700 hover:text-teal-600">Tentang Kami</a>
+            <a href="#kontak" class="block py-2 text-gray-700 hover:text-teal-600">Kontak</a>
+        </div>
+    </nav>
+
+    <section id="beranda" class="relative h-[calc(100vh-80px)] min-h-[500px] flex items-center justify-center text-center text-white">
+        <div class="absolute inset-0 bg-black opacity-50 z-0"></div>
+        <div class="absolute inset-0 bg-cover bg-center z-[-1]" style="background-image: url('https://images.unsplash.com/photo-1587174486299-74b88347f813?q=80&w=2070&auto=format&fit=crop');"></div>
+        <div class="relative z-10 px-4">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4 leading-tight">Solusi Terbaik Untuk Kebutuhan Anda</h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">Kami menyediakan produk berkualitas tinggi dengan pelayanan terbaik.</p>
+            <a href="https://wa.me/089512650561?text=Halo,%20saya%20ingin%20bertanya%20tentang%20produk%20Anda" class="whatsapp-btn inline-flex items-center bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full text-lg">
+                <i class="fab fa-whatsapp mr-3 text-2xl"></i>
+                Pesan via WhatsApp
+            </a>
+        </div>
+    </section>
+
+    <section id="tentang" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-800 mb-3">Tentang Kami</h2>
+                <div class="w-24 h-1.5 bg-teal-500 mx-auto rounded-full"></div>
+            </div>
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-1/2">
+                    <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1932&auto=format&fit=crop" alt="Tim perusahaan" class="rounded-xl shadow-2xl w-full">
+                </div>
+                <div class="md:w-1/2">
+                    <h3 class="text-3xl font-semibold text-gray-800 mb-4">Misi Kami</h3>
+                    <p class="text-gray-600 mb-4 text-lg">
+                        Kami adalah perusahaan yang berdedikasi untuk menyediakan produk berkualitas tinggi dengan pelayanan prima kepada setiap pelanggan. Kami percaya bahwa kepuasan Anda adalah prioritas utama kami.
+                    </p>
+                    <p class="text-gray-600 mb-8 text-lg">
+                        Visi kami adalah menjadi mitra terpercaya bagi Anda dengan menyediakan solusi yang inovatif, efektif, dan terjangkau.
+                    </p>
+                    <a href="https://wa.me/089512650561?text=Halo,%20saya%20ingin%20bertanya%20lebih%20lanjut%20tentang%20perusahaan%20Anda" class="whatsapp-btn inline-flex items-center bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-6 rounded-lg">
+                        <i class="fab fa-whatsapp mr-2"></i>
+                        Hubungi Kami
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="produk" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-800 mb-3">Produk Unggulan Kami</h2>
+                <div class="w-24 h-1.5 bg-teal-500 mx-auto rounded-full"></div>
+                <p class="text-gray-600 mt-4 max-w-2xl mx-auto text-lg">Jelajahi rangkaian produk berkualitas yang kami tawarkan untuk memenuhi segala kebutuhan Anda.</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="produk-container">
+                <div class="text-center py-8 col-span-full">
+                    <i class="fas fa-spinner fa-spin text-4xl text-teal-500 mb-3"></i>
+                    <p class="text-lg">Memuat produk...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="keranjang-modal" class="modal fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 invisible opacity-0">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col">
+            <div class="flex justify-between items-center border-b p-5">
+                <h3 class="text-2xl font-bold text-gray-800">Keranjang Belanja</h3>
+                <button id="close-modal" class="text-gray-500 hover:text-gray-800 transition-colors">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <div class="p-5 overflow-y-auto" id="keranjang-items">
+                <div class="text-center py-12 text-gray-500">
+                    <i class="fas fa-shopping-cart text-5xl mb-4"></i>
+                    <p class="text-xl">Keranjang belanja Anda kosong</p>
+                </div>
+            </div>
+            <div class="border-t p-5 mt-auto bg-gray-50">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="font-semibold text-lg">Total:</span>
+                    <span id="keranjang-total" class="font-bold text-xl text-teal-600">Rp 0</span>
+                </div>
+                <a id="checkout-btn" href="#" class="whatsapp-btn block text-center bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg text-lg hidden">
+                    <i class="fab fa-whatsapp mr-2"></i>
+                    Pesan Sekarang
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-gray-800 text-white pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+                <div class="md:col-span-1">
+                    <h3 id="kontak" class="text-2xl font-bold mb-4">JylooCare</h3>
+                    <p class="text-gray-400">Solusi terbaik untuk kebutuhan sehari-hari Anda dengan produk berkualitas dan pelayanan terbaik.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 tracking-wider uppercase">Menu</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#beranda" class="text-gray-400 hover:text-white transition-colors">Beranda</a></li>
+                        <li><a href="#produk" class="text-gray-400 hover:text-white transition-colors">Produk</a></li>
+                        <li><a href="#tentang" class="text-gray-400 hover:text-white transition-colors">Tentang Kami</a></li>
+                        <li><a href="#kontak" class="text-gray-400 hover:text-white transition-colors">Kontak</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 tracking-wider uppercase">Kontak Kami</h4>
+                    <ul class="space-y-3 text-gray-400">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3 w-4"></i>
+                            <span>Bogor, Indonesia</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone-alt mt-1 mr-3 w-4"></i>
+                            <span>0895-1265-0561</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-3 w-4"></i>
+                            <span>reshop@gmail.com</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 tracking-wider uppercase">Media Sosial</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-transform hover:scale-110 text-2xl"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-transform hover:scale-110 text-2xl"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-transform hover:scale-110 text-2xl"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-transform hover:scale-110 text-2xl"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-6 mt-8 text-center text-gray-500">
+                <p>&copy; 2024 Reshop Semua Hak Dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Fungsionalitas tetap sama, hanya beberapa penyesuaian kecil
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 70, // Adjusted for sticky nav height
+                        behavior: 'smooth'
+                    });
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+
+        let keranjang = [];
+        const keranjangBtn = document.getElementById('keranjang-btn');
+        const keranjangBtnMobile = document.getElementById('keranjang-btn-mobile');
+        const keranjangCount = document.getElementById('keranjang-count');
+        const keranjangCountMobile = document.getElementById('keranjang-count-mobile');
+        const keranjangModal = document.getElementById('keranjang-modal');
+        const closeModal = document.getElementById('close-modal');
+        const keranjangItems = document.getElementById('keranjang-items');
+        const keranjangTotal = document.getElementById('keranjang-total');
+        const checkoutBtn = document.getElementById('checkout-btn');
+
+        keranjangBtn.addEventListener('click', tampilkanKeranjang);
+        keranjangBtnMobile.addEventListener('click', tampilkanKeranjang);
+
+        closeModal.addEventListener('click', () => {
+            keranjangModal.classList.add('invisible', 'opacity-0');
+        });
+
+        keranjangModal.addEventListener('click', (e) => {
+            if (e.target === keranjangModal) {
+                 keranjangModal.classList.add('invisible', 'opacity-0');
+            }
+        });
+
+        function tampilkanKeranjang() {
+            updateKeranjangDisplay();
+            keranjangModal.classList.remove('invisible', 'opacity-0');
+        }
+
+        function updateKeranjangDisplay() {
+            const totalItems = keranjang.reduce((total, item) => total + item.jumlah, 0);
+            const countElements = [keranjangCount, keranjangCountMobile];
+            
+            countElements.forEach(el => {
+                if (totalItems > 0) {
+                    el.textContent = totalItems;
+                    el.classList.remove('hidden');
+                } else {
+                    el.classList.add('hidden');
+                }
+            });
+
+            if (keranjang.length === 0) {
+                keranjangItems.innerHTML = `
+                    <div class="text-center py-12 text-gray-500">
+                        <i class="fas fa-shopping-cart text-5xl mb-4"></i>
+                        <p class="text-xl">Keranjang belanja Anda kosong</p>
+                    </div>`;
+                checkoutBtn.classList.add('hidden');
+            } else {
+                keranjangItems.innerHTML = '';
+                keranjang.forEach((item, index) => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'flex justify-between items-center py-4 border-b last:border-b-0';
+                    itemElement.innerHTML = `
+                        <div class="flex items-center space-x-4">
+                            <img src="${item.gambar}" alt="${item.nama}" class="w-16 h-16 object-contain rounded-md bg-gray-100 p-1">
+                            <div>
+                                <h4 class="font-semibold">${item.nama}</h4>
+                                <p class="text-sm text-gray-600">${formatRupiah(item.harga)} x ${item.jumlah}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <span class="font-bold text-gray-800">${formatRupiah(item.harga * item.jumlah)}</span>
+                            <button class="text-red-500 hover:text-red-700 transition-colors hapus-item" data-index="${index}">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>`;
+                    keranjangItems.appendChild(itemElement);
+                });
+
+                document.querySelectorAll('.hapus-item').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const index = e.currentTarget.getAttribute('data-index');
+                        hapusItemDariKeranjang(index);
+                    });
+                });
+                checkoutBtn.classList.remove('hidden');
+            }
+
+            const totalHarga = keranjang.reduce((total, item) => total + (item.harga * item.jumlah), 0);
+            keranjangTotal.textContent = formatRupiah(totalHarga);
+            
+            const pesan = generateWhatsAppMessage();
+            checkoutBtn.href = `https://wa.me/089512650561?text=${encodeURIComponent(pesan)}`;
+        }
+
+        function tambahKeKeranjang(produk) {
+            const existingItem = keranjang.find(item => item.id === produk.id);
+            if (existingItem) {
+                existingItem.jumlah += 1;
+            } else {
+                keranjang.push({ ...produk, jumlah: 1 });
+            }
+            updateKeranjangDisplay();
+            tampilkanKeranjang();
+        }
+
+        function hapusItemDariKeranjang(index) {
+            keranjang.splice(index, 1);
+            updateKeranjangDisplay();
+        }
+
+        function generateWhatsAppMessage() {
+            let pesan = "Halo, saya ingin memesan produk berikut:\n\n";
+            keranjang.forEach(item => {
+                pesan += `• ${item.nama} (${item.jumlah} x ${formatRupiah(item.harga)}) = ${formatRupiah(item.harga * item.jumlah)}\n`;
+            });
+            const totalHarga = keranjang.reduce((total, item) => total + (item.harga * item.jumlah), 0);
+            pesan += `\n*Total Pesanan: ${formatRupiah(totalHarga)}*\n\nMohon konfirmasi ketersediaan dan proses selanjutnya. Terima kasih.`;
+            return pesan;
+        }
+
+        function formatRupiah(angka) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+        }
+
+        const apiUrl = 'https://crud-api-production-1baf.up.railway.app/api/products';
+        const produkContainer = document.getElementById('produk-container');
+
+        function loadProducts() {
+            fetch(apiUrl)
+                .then(res => res.ok ? res.json() : Promise.reject(res))
+                .then(data => {
+                    produkContainer.innerHTML = '';
+                    if (!data || data.length === 0) {
+                        produkContainer.innerHTML = '<p class="text-center col-span-full text-gray-500 text-lg">Tidak ada produk yang tersedia saat ini.</p>';
+                        return;
+                    }
+                    
+                    data.forEach(p => {
+                        const image = p.gambar && p.gambar.includes('localhost')
+                            ? p.gambar.replace('http://localhost:3000', 'https://crud-api-production-1baf.up.railway.app')
+                            : p.gambar || 'https://placehold.co/400x400?text=Produk';
+                        
+                        const produkCard = document.createElement('div');
+                        produkCard.className = 'bg-white rounded-xl shadow-lg overflow-hidden flex flex-col product-card';
+                        produkCard.innerHTML = `
+                            <div class="overflow-hidden">
+                                <img src="${image}" alt="${p.nama_produk}" class="product-image p-4">
+                            </div>
+                            <div class="p-6 flex flex-col flex-grow">
+                                <h3 class="text-xl font-bold text-gray-800 mb-2">${p.nama_produk}</h3>
+                                <p class="text-gray-600 mb-4 flex-grow">${p.detail || 'Produk berkualitas dengan harga terjangkau.'}</p>
+                                <p class="text-teal-600 font-bold text-2xl mb-4">${formatRupiah(p.harga || 0)}</p>
+                                <div class="mt-auto space-y-2">
+                                     <button class="tambah-keranjang w-full bg-teal-500 hover:bg-teal-600 text-white font-bold py-2.5 px-4 rounded-lg transition-colors"
+                                        data-id="${p.id}"
+                                        data-nama="${p.nama_produk}"
+                                        data-harga="${p.harga || 0}"
+                                        data-gambar="${image}">
+                                        <i class="fas fa-cart-plus mr-2"></i> Tambah Keranjang
+                                    </button>
+                                    <a href="https://wa.me/089512650561?text=Saya%20tertarik%20dengan%20produk%20${encodeURIComponent(p.nama_produk)}" class="whatsapp-btn block text-center bg-green-500 hover:bg-green-600 text-white font-bold py-2.5 px-4 rounded-lg">
+                                        <i class="fab fa-whatsapp mr-2"></i> Pesan Langsung
+                                    </a>
+                                </div>
+                            </div>`;
+                        produkContainer.appendChild(produkCard);
+                    });
+
+                    document.querySelectorAll('.tambah-keranjang').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            const dataset = e.currentTarget.dataset;
+                            const produk = {
+                                id: dataset.id,
+                                nama: dataset.nama,
+                                harga: parseInt(dataset.harga),
+                                gambar: dataset.gambar
+                            };
+                            tambahKeKeranjang(produk);
+                        });
+                    });
+                })
+                .catch(err => {
+                    produkContainer.innerHTML = `
+                        <div class="text-center col-span-full py-12 bg-red-50 rounded-lg">
+                            <i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-3"></i>
+                            <p class="text-red-600 text-xl mb-4">Gagal memuat produk.</p>
+                            <button onclick="loadProducts()" class="mt-4 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-5 rounded-lg transition-colors">
+                                <i class="fas fa-sync-alt mr-2"></i> Coba Lagi
+                            </button>
+                        </div>`;
+                    console.error('Error fetching products:', err);
+                });
+        }
+
+        loadProducts();
+    </script>
+</body>
+</html>
