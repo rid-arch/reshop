@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reshop - Skincare Premium untuk Kulit Sehat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',  // Blue-500
+                        primaryDark: '#2563eb', // Blue-600
+                        secondary: '#f0f9ff', // Blue-50
+                        accent: '#f59e0b', // Amber-500
+                    },
+                    fontFamily: {
+                        sans: ['"Poppins"', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .product-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.15);
+        }
+        .product-image {
+            height: 240px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #3b82f6;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .whatsapp-btn {
+            transition: all 0.3s ease;
+        }
+        .whatsapp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
+        }
+        .hero-section {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.8) 0%, rgba(59, 130, 246, 0.6) 100%);
+        }
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #f59e0b;
+            color: white;
+            border-radius: 9999px;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .category-chip {
+            transition: all 0.2s ease;
+        }
+        .category-chip:hover {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .category-chip.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .testimonial-card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.15);
+        }
+    </style>
+</head>
+<body class="font-sans bg-secondary">
+    <!-- Floating WhatsApp Button -->
+    <div class="fixed bottom-6 right-6 z-40">
+        <a href="https://wa.me/089512650561?text=Halo%20Reshop,%20saya%20ingin%20bertanya%20tentang%20produk%20skincare" 
+           class="whatsapp-btn flex items-center justify-center w-16 h-16 rounded-full bg-green-500 text-white text-2xl shadow-lg">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-3">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full bg-primary text-white">
+                        <i class="fas fa-spa text-xl"></i>
+                    </div>
+                    <span class="text-2xl font-bold text-primary">Reshop</span>
+                </div>
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#beranda" class="nav-link text-gray-700 hover:text-primary font-medium">Beranda</a>
+                    <a href="#produk" class="nav-link text-gray-700 hover:text-primary font-medium">Produk</a>
+                    <a href="#kategori" class="nav-link text-gray-700 hover:text-primary font-medium">Kategori</a>
+                    <a href="#testimoni" class="nav-link text-gray-700 hover:text-primary font-medium">Testimoni</a>
+                    <a href="#tentang" class="nav-link text-gray-700 hover:text-primary font-medium">Tentang Kami</a>
+                    <button id="keranjang-btn" class="relative text-gray-700 hover:text-primary transition-colors">
+                        <i class="fas fa-shopping-cart text-2xl"></i>
+                        <span id="keranjang-count" class="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+                    </button>
+                </div>
+                <div class="md:hidden flex items-center space-x-4">
+                    <button id="keranjang-btn-mobile" class="relative text-gray-700">
+                        <i class="fas fa-shopping-cart text-2xl"></i>
+                        <span id="keranjang-count-mobile" class="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+                    </button>
+                    <button id="menu-btn" class="text-gray-700">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white px-4 pb-4 space-y-2">
+            <a href="#beranda" class="block py-2 text-gray-700 hover:text-primary font-medium">Beranda</a>
+            <a href="#produk" class="block py-2 text-gray-700 hover:text-primary font-medium">Produk</a>
+            <a href="#kategori" class="block py-2 text-gray-700 hover:text-primary font-medium">Kategori</a>
+            <a href="#testimoni" class="block py-2 text-gray-700 hover:text-primary font-medium">Testimoni</a>
+            <a href="#tentang" class="block py-2 text-gray-700 hover:text-primary font-medium">Tentang Kami</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="beranda" class="hero-section relative py-20 md:py-32 text-center text-white">
+        <div class="absolute inset-0 bg-gradient-to-r from-primary/80 to-primaryDark/80 z-0"></div>
+        <div class="absolute inset-0 bg-cover bg-center z-[-1]" style="background-image: url('https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=1887&auto=format&fit=crop');"></div>
+        <div class="relative z-10 px-4 max-w-4xl mx-auto">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">Kulit Sehat, Percaya Diri Maksimal</h1>
+            <p class="text-xl md:text-2xl mb-8">Produk skincare premium dengan bahan alami untuk perawatan kulit terbaik Anda.</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#produk" class="bg-white text-primary hover:bg-gray-100 font-bold py-3 px-8 rounded-full text-lg transition-colors">
+                    Jelajahi Produk
+                </a>
+                <a href="https://wa.me/089512650561?text=Halo%20Reshop,%20saya%20ingin%20konsultasi%20produk%20skincare" 
+                   class="whatsapp-btn inline-flex items-center justify-center bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full text-lg">
+                    <i class="fab fa-whatsapp mr-3 text-2xl"></i>
+                    Konsultasi Gratis
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="flex flex-col items-center text-center p-6 rounded-xl bg-secondary">
+                    <div class="w-16 h-16 flex items-center justify-center rounded-full bg-primary text-white text-2xl mb-4">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Bahan Alami</h3>
+                    <p class="text-gray-600">Formulasi dengan ekstrak tumbuhan alami yang aman untuk semua jenis kulit.</p>
+                </div>
+                <div class="flex flex-col items-center text-center p-6 rounded-xl bg-secondary">
+                    <div class="w-16 h-16 flex items-center justify-center rounded-full bg-primary text-white text-2xl mb-4">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">BPOM Terdaftar</h3>
+                    <p class="text-gray-600">Produk kami telah terdaftar BPOM dan memenuhi standar keamanan.</p>
+                </div>
+                <div class="flex flex-col items-center text-center p-6 rounded-xl bg-secondary">
+                    <div class="w-16 h-16 flex items-center justify-center rounded-full bg-primary text-white text-2xl mb-4">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Gratis Ongkir</h3>
+                    <p class="text-gray-600">Gratis pengiriman untuk pembelian di atas Rp 300.000 ke seluruh Indonesia.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Categories -->
+    <section id="kategori" class="py-16 bg-secondary">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-3">Kategori Produk</h2>
+                <div class="w-20 h-1.5 bg-primary mx-auto rounded-full"></div>
+                <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Temukan produk skincare sesuai kebutuhan perawatan kulit Anda</p>
+            </div>
+            <div class="flex flex-wrap justify-center gap-3 mb-12">
+                <button class="category-chip active px-4 py-2 bg-white text-primary border border-primary rounded-full font-medium text-sm">
+                    Semua Produk
+                </button>
+                <button class="category-chip px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-full font-medium text-sm">
+                    Perawatan Wajah
+                </button>
+                <button class="category-chip px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-full font-medium text-sm">
+                    Serum & Essence
+                </button>
+                <button class="category-chip px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-full font-medium text-sm">
+                    Pelembab
+                </button>
+                <button class="category-chip px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-full font-medium text-sm">
+                    Sunscreen
+                </button>
+                <button class="category-chip px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-full font-medium text-sm">
+                    Masker
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="produk" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-3">Produk Unggulan</h2>
+                <div class="w-20 h-1.5 bg-primary mx-auto rounded-full"></div>
+                <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Rangkaian produk skincare berkualitas untuk perawatan kulit optimal</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8" id="produk-container">
+                <div class="text-center py-8 col-span-full">
+                    <i class="fas fa-spinner fa-spin text-4xl text-primary mb-3"></i>
+                    <p class="text-lg">Memuat produk...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimoni" class="py-16 bg-secondary">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-3">Testimoni Pelanggan</h2>
+                <div class="w-20 h-1.5 bg-primary mx-auto rounded-full"></div>
+                <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Apa kata mereka tentang produk Reshop</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="testimonial-card bg-white p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full overflow-hidden mr-4">
+                            <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Testimoni 1" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">Sarah Wijaya</h4>
+                            <div class="flex text-yellow-400 text-sm">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"Serum vitamin C dari Reshop benar-benar mengubah kulit wajah saya. Lebih cerah dan glowing dalam 2 minggu pemakaian. Sangat recommended!"</p>
+                </div>
+                <div class="testimonial-card bg-white p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full overflow-hidden mr-4">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Testimoni 2" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">Dina Putri</h4>
+                            <div class="flex text-yellow-400 text-sm">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"Pelembabnya sangat cocok untuk kulit sensitif saya. Tidak menyebabkan breakout dan membuat kulit terasa lembut sepanjang hari."</p>
+                </div>
+                <div class="testimonial-card bg-white p-6 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full overflow-hidden mr-4">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Testimoni 3" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">Andi Pratama</h4>
+                            <div class="flex text-yellow-400 text-sm">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"Sunscreen dari Reshop tidak lengket dan cepat menyerap. Sangat cocok untuk kulit berminyak seperti saya. Tidak menyebabkan white cast juga."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us -->
+    <section id="tentang" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-1/2">
+                    <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2070&auto=format&fit=crop" alt="Tim Reshop" class="rounded-xl shadow-xl w-full">
+                </div>
+                <div class="md:w-1/2">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Tentang Reshop</h2>
+                    <div class="w-20 h-1.5 bg-primary rounded-full mb-6"></div>
+                    <p class="text-gray-600 mb-4">
+                        Reshop hadir sebagai solusi perawatan kulit yang aman, efektif, dan terjangkau. Kami berkomitmen untuk menyediakan produk skincare dengan formulasi berbahan alami yang telah teruji klinis.
+                    </p>
+                    <p class="text-gray-600 mb-6">
+                        Setiap produk kami dikembangkan oleh tim ahli dermatologi dengan memperhatikan kebutuhan berbagai jenis kulit. Kami percaya bahwa perawatan kulit yang baik harus bisa dinikmati oleh semua orang.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="https://wa.me/089512650561?text=Halo%20Reshop,%20saya%20ingin%20bertanya%20lebih%20lanjut%20tentang%20produk" 
+                           class="whatsapp-btn inline-flex items-center justify-center bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg">
+                            <i class="fab fa-whatsapp mr-2"></i>
+                            Konsultasi Sekarang
+                        </a>
+                        <a href="#produk" class="inline-flex items-center justify-center bg-primary hover:bg-primaryDark text-white font-bold py-3 px-6 rounded-lg transition-colors">
+                            Lihat Produk
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="py-16 bg-primary text-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl font-bold mb-4">Dapatkan Tips Perawatan Kulit</h2>
+            <p class="text-lg mb-8">Berlangganan newsletter kami untuk mendapatkan tips eksklusif dan penawaran spesial</p>
+            <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                <input type="email" placeholder="Alamat email Anda" class="flex-grow px-4 py-3 rounded-lg focus:outline-none text-gray-800">
+                <button type="submit" class="bg-accent hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+                    Berlangganan
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Shopping Cart Modal -->
+    <div id="keranjang-modal" class="modal fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 invisible opacity-0">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col">
+            <div class="flex justify-between items-center border-b p-5">
+                <h3 class="text-2xl font-bold text-gray-800">Keranjang Belanja</h3>
+                <button id="close-modal" class="text-gray-500 hover:text-gray-800 transition-colors">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <div class="p-5 overflow-y-auto" id="keranjang-items">
+                <div class="text-center py-12 text-gray-500">
+                    <i class="fas fa-shopping-cart text-5xl mb-4"></i>
+                    <p class="text-xl">Keranjang belanja Anda kosong</p>
+                </div>
+            </div>
+            <div class="border-t p-5 mt-auto bg-gray-50">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="font-semibold text-lg">Total:</span>
+                    <span id="keranjang-total" class="font-bold text-xl text-primary">Rp 0</span>
+                </div>
+                <a id="checkout-btn" href="#" class="whatsapp-btn block text-center bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg text-lg hidden">
+                    <i class="fab fa-whatsapp mr-2"></i>
+                    Pesan Sekarang
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+                <div class="md:col-span-1">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-primary text-white">
+                            <i class="fas fa-spa text-xl"></i>
+                        </div>
+                        <span class="text-2xl font-bold">Reshop</span>
+                    </div>
+                    <p class="text-gray-400">Solusi perawatan kulit premium dengan bahan alami untuk kulit sehat dan glowing.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 tracking-wider uppercase">Menu</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#beranda" class="text-gray-400 hover:text-white transition-colors">Beranda</a></li>
+                        <li><a href="#produk" class="text-gray-400 hover:text-white transition-colors">Produk</a></li>
+                        <li><a href="#kategori" class="text-gray-400 hover:text-white transition-colors">Kategori</a></li>
+                        <li><a href="#tentang" class="text-gray-400 hover:text-white transition-colors">Tentang Kami</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 tracking-wider uppercase">Kontak Kami</h4>
+                    <ul class="space-y-3 text-gray-400">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3 w-4"></i>
+                            <span>Jakarta, Indonesia</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone-alt mt-1 mr-3 w-4"></i>
+                            <span>0895-1265-0561</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-3 w-4"></i>
+                            <span>info@reshop.com</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 tracking-wider uppercase">Media Sosial</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-transform hover:scale-110 text-2xl"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-transform hover:scale-110 text-2xl"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-transform hover:scale-110 text-2xl"><i class="fab fa-tiktok"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-transform hover:scale-110 text-2xl"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-6 mt-8 text-center text-gray-500">
+                <p>&copy; 2024 Reshop. Semua Hak Dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Smooth Scrolling for Anchor Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 70,
+                        behavior: 'smooth'
+                    });
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+
+        // Shopping Cart Functionality
+        let keranjang = [];
+        const keranjangBtn = document.getElementById('keranjang-btn');
+        const keranjangBtnMobile = document.getElementById('keranjang-btn-mobile');
+        const keranjangCount = document.getElementById('keranjang-count');
+        const keranjangCountMobile = document.getElementById('keranjang-count-mobile');
+        const keranjangModal = document.getElementById('keranjang-modal');
+        const closeModal = document.getElementById('close-modal');
+        const keranjangItems = document.getElementById('keranjang-items');
+        const keranjangTotal = document.getElementById('keranjang-total');
+        const checkoutBtn = document.getElementById('checkout-btn');
+
+        keranjangBtn.addEventListener('click', tampilkanKeranjang);
+        keranjangBtnMobile.addEventListener('click', tampilkanKeranjang);
+
+        closeModal.addEventListener('click', () => {
+            keranjangModal.classList.add('invisible', 'opacity-0');
+        });
+
+        keranjangModal.addEventListener('click', (e) => {
+            if (e.target === keranjangModal) {
+                keranjangModal.classList.add('invisible', 'opacity-0');
+            }
+        });
+
+        function tampilkanKeranjang() {
+            updateKeranjangDisplay();
+            keranjangModal.classList.remove('invisible', 'opacity-0');
+        }
+
+        function updateKeranjangDisplay() {
+            const totalItems = keranjang.reduce((total, item) => total + item.jumlah, 0);
+            const countElements = [keranjangCount, keranjangCountMobile];
+            
+            countElements.forEach(el => {
+                if (totalItems > 0) {
+                    el.textContent = totalItems;
+                    el.classList.remove('hidden');
+                } else {
+                    el.classList.add('hidden');
+                }
+            });
+
+            if (keranjang.length === 0) {
+                keranjangItems.innerHTML = `
+                    <div class="text-center py-12 text-gray-500">
+                        <i class="fas fa-shopping-cart text-5xl mb-4"></i>
+                        <p class="text-xl">Keranjang belanja Anda kosong</p>
+                    </div>`;
+                checkoutBtn.classList.add('hidden');
+            } else {
+                keranjangItems.innerHTML = '';
+                keranjang.forEach((item, index) => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'flex justify-between items-center py-4 border-b last:border-b-0';
+                    itemElement.innerHTML = `
+                        <div class="flex items-center space-x-4">
+                            <img src="${item.gambar}" alt="${item.nama}" class="w-16 h-16 object-contain rounded-md bg-gray-100 p-1">
+                            <div>
+                                <h4 class="font-semibold">${item.nama}</h4>
+                                <p class="text-sm text-gray-600">${formatRupiah(item.harga)} x ${item.jumlah}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <span class="font-bold text-gray-800">${formatRupiah(item.harga * item.jumlah)}</span>
+                            <button class="text-red-500 hover:text-red-700 transition-colors hapus-item" data-index="${index}">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>`;
+                    keranjangItems.appendChild(itemElement);
+                });
+
+                document.querySelectorAll('.hapus-item').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const index = e.currentTarget.getAttribute('data-index');
+                        hapusItemDariKeranjang(index);
+                    });
+                });
+                checkoutBtn.classList.remove('hidden');
+            }
+
+            const totalHarga = keranjang.reduce((total, item) => total + (item.harga * item.jumlah), 0);
+            keranjangTotal.textContent = formatRupiah(totalHarga);
+            
+            const pesan = generateWhatsAppMessage();
+            checkoutBtn.href = `https://wa.me/089512650561?text=${encodeURIComponent(pesan)}`;
+        }
+
+        function tambahKeKeranjang(produk) {
+            const existingItem = keranjang.find(item => item.id === produk.id);
+            if (existingItem) {
+                existingItem.jumlah += 1;
+            } else {
+                keranjang.push({ ...produk, jumlah: 1 });
+            }
+            updateKeranjangDisplay();
+            
+            // Show notification
+            const notification = document.createElement('div');
+            notification.className = 'fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg flex items-center';
+            notification.innerHTML = `
+                <i class="fas fa-check-circle mr-2"></i>
+                ${produk.nama} ditambahkan ke keranjang
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('opacity-0', 'translate-y-4');
+                setTimeout(() => notification.remove(), 300);
+            }, 2000);
+        }
+
+        function hapusItemDariKeranjang(index) {
+            keranjang.splice(index, 1);
+            updateKeranjangDisplay();
+        }
+
+        function generateWhatsAppMessage() {
+            let pesan = "Halo Reshop, saya ingin memesan produk berikut:\n\n";
+            keranjang.forEach(item => {
+                pesan += `• ${item.nama} (${item.jumlah} x ${formatRupiah(item.harga)}) = ${formatRupiah(item.harga * item.jumlah)}\n`;
+            });
+            const totalHarga = keranjang.reduce((total, item) => total + (item.harga * item.jumlah), 0);
+            pesan += `\n*Total Pesanan: ${formatRupiah(totalHarga)}*\n\nMohon konfirmasi ketersediaan dan proses pembayaran. Terima kasih.`;
+            return pesan;
+        }
+
+        function formatRupiah(angka) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+        }
+
+        // Product Categories Filter
+        const categoryChips = document.querySelectorAll('.category-chip');
+        categoryChips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                categoryChips.forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                // In a real implementation, you would filter products here
+            });
+        });
+
+        // Load Products from API
+        const apiUrl = 'https://crud-api-production-1baf.up.railway.app/api/products';
+        const produkContainer = document.getElementById('produk-container');
+
+        function loadProducts() {
+            fetch(apiUrl)
+                .then(res => res.ok ? res.json() : Promise.reject(res))
+                .then(data => {
+                    produkContainer.innerHTML = '';
+                    if (!data || data.length === 0) {
+                        produkContainer.innerHTML = '<p class="text-center col-span-full text-gray-500 text-lg">Tidak ada produk yang tersedia saat ini.</p>';
+                        return;
+                    }
+                    
+                    // Sample skincare products (in a real app, this would come from the API)
+                    // const skincareProducts = [
+                    //     {
+                    //         id: 'sk001',
+                    //         nama_produk: 'Serum Vitamin C Glow',
+                    //         detail: 'Serum dengan kandungan 15% vitamin C untuk mencerahkan kulit dan mengurangi hiperpigmentasi.',
+                    //         harga: 175000,
+                    //         gambar: 'https://images.unsplash.com/photo-1556228578-8c18c9b1b0de?q=80&w=1887&auto=format&fit=crop'
+                    //     },
+                    //     {
+                    //         id: 'sk002',
+                    //         nama_produk: 'Pelembab Hyaluronic Acid',
+                    //         detail: 'Pelembab intensif dengan hyaluronic acid untuk kulit kering dan dehidrasi.',
+                    //         harga: 145000,
+                    //         gambar: 'https://images.unsplash.com/photo-1556228579-4a5c9b3b0e3e?q=80&w=1887&auto=format&fit=crop'
+                    //     },
+                    //     {
+                    //         id: 'sk003',
+                    //         nama_produk: 'Sunscreen SPF 50+ PA++++',
+                    //         detail: 'Sunscreen broad spectrum dengan tekstur ringan dan tidak lengket.',
+                    //         harga: 125000,
+                    //         gambar: 'https://images.unsplash.com/photo-1556228579-4a5c9b3b0e3e?q=80&w=1887&auto=format&fit=crop'
+                    //     },
+                    //     {
+                    //         id: 'sk004',
+                    //         nama_produk: 'Cleanser Gentle Foam',
+                    //         detail: 'Pembersih wajah berbusa lembut untuk semua jenis kulit, termasuk sensitif.',
+                    //         harga: 95000,
+                    //         gambar: 'https://images.unsplash.com/photo-1556228579-4a5c9b3b0e3e?q=80&w=1887&auto=format&fit=crop'
+                    //     },
+                    //     {
+                    //         id: 'sk005',
+                    //         nama_produk: 'Toner Witch Hazel',
+                    //         detail: 'Toner dengan witch hazel untuk menenangkan kulit dan mengecilkan pori-pori.',
+                    //         harga: 110000,
+                    //         gambar: 'https://images.unsplash.com/photo-1556228579-4a5c9b3b0e3e?q=80&w=1887&auto=format&fit=crop'
+                    //     },
+                    //     {
+                    //         id: 'sk006',
+                    //         nama_produk: 'Masker Clay Detox',
+                    //         detail: 'Masker clay dengan charcoal untuk detoksifikasi kulit berminyak dan berjerawat.',
+                    //         harga: 85000,
+                    //         gambar: 'https://images.unsplash.com/photo-1556228579-4a5c9b3b0e3e?q=80&w=1887&auto=format&fit=crop'
+                    //     },
+                    //     {
+                    //         id: 'sk007',
+                    //         nama_produk: 'Night Cream Retinol',
+                    //         detail: 'Krim malam dengan retinol untuk regenerasi kulit dan mengurangi garis halus.',
+                    //         harga: 195000,
+                    //         gambar: 'https://images.unsplash.com/photo-1556228579-4a5c9b3b0e3e?q=80&w=1887&auto=format&fit=crop'
+                    //     },
+                    //     {
+                    //         id: 'sk008',
+                    //         nama_produk: 'Eye Cream Caffeine',
+                    //         detail: 'Krim mata dengan kafein untuk mengurangi mata panda dan bengkak.',
+                    //         harga: 135000,
+                    //         gambar: 'https://images.unsplash.com/photo-1556228579-4a5c9b3b0e3e?q=80&w=1887&auto=format&fit=crop'
+                    //     }
+                    // ];
+
+                    skincareProducts.forEach(p => {
+                        const produkCard = document.createElement('div');
+                        produkCard.className = 'bg-white rounded-xl shadow-lg overflow-hidden flex flex-col product-card';
+                        produkCard.innerHTML = `
+                            <div class="relative overflow-hidden">
+                                <img src="${p.gambar}" alt="${p.nama_produk}" class="product-image p-4 w-full">
+                                ${p.id === 'sk001' ? '<span class="badge">BESTSELLER</span>' : ''}
+                            </div>
+                            <div class="p-6 flex flex-col flex-grow">
+                                <h3 class="text-xl font-bold text-gray-800 mb-2">${p.nama_produk}</h3>
+                                <p class="text-gray-600 mb-4 flex-grow">${p.detail}</p>
+                                <p class="text-primary font-bold text-2xl mb-4">${formatRupiah(p.harga)}</p>
+                                <div class="mt-auto space-y-2">
+                                    <button class="tambah-keranjang w-full bg-primary hover:bg-primaryDark text-white font-bold py-2.5 px-4 rounded-lg transition-colors"
+                                        data-id="${p.id}"
+                                        data-nama="${p.nama_produk}"
+                                        data-harga="${p.harga}"
+                                        data-gambar="${p.gambar}">
+                                        <i class="fas fa-cart-plus mr-2"></i> Tambah Keranjang
+                                    </button>
+                                    <a href="https://wa.me/089512650561?text=Saya%20tertarik%20dengan%20produk%20${encodeURIComponent(p.nama_produk)}" 
+                                       class="whatsapp-btn block text-center bg-green-500 hover:bg-green-600 text-white font-bold py-2.5 px-4 rounded-lg">
+                                        <i class="fab fa-whatsapp mr-2"></i> Pesan Langsung
+                                    </a>
+                                </div>
+                            </div>`;
+                        produkContainer.appendChild(produkCard);
+                    });
+
+                    document.querySelectorAll('.tambah-keranjang').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            const dataset = e.currentTarget.dataset;
+                            const produk = {
+                                id: dataset.id,
+                                nama: dataset.nama,
+                                harga: parseInt(dataset.harga),
+                                gambar: dataset.gambar
+                            };
+                            tambahKeKeranjang(produk);
+                        });
+                    });
+                })
+                .catch(err => {
+                    produkContainer.innerHTML = `
+                        <div class="text-center col-span-full py-12 bg-red-50 rounded-lg">
+                            <i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-3"></i>
+                            <p class="text-red-600 text-xl mb-4">Gagal memuat produk.</p>
+                            <button onclick="loadProducts()" class="mt-4 bg-primary hover:bg-primaryDark text-white font-bold py-2 px-5 rounded-lg transition-colors">
+                                <i class="fas fa-sync-alt mr-2"></i> Coba Lagi
+                            </button>
+                        </div>`;
+                    console.error('Error fetching products:', err);
+                });
+        }
+
+        loadProducts();
+    </script>
+</body>
+</html>
